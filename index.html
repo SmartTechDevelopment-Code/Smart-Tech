@@ -206,6 +206,42 @@
             box-shadow: 0 8px 32px rgba(50, 255, 150, 0.5), inset 0 0 20px rgba(100, 255, 180, 0.3);
         }
 
+        .card3 {
+            width: 240px;
+            height: 160px;
+            top: 10%;
+            right: 5%;
+            animation: float1 6s ease-in-out infinite;
+            background: linear-gradient(135deg, rgba(255, 50, 100, 0.3), rgba(220, 40, 80, 0.2));
+            border-color: rgba(255, 50, 100, 0.6);
+            color: rgba(255, 80, 120, 1);
+            text-shadow: 0 0 20px rgba(255, 50, 100, 0.8);
+            box-shadow: 0 8px 32px rgba(255, 50, 100, 0.3), inset 0 0 20px rgba(255, 80, 120, 0.2);
+        }
+        
+        .card3:hover {
+            background: linear-gradient(135deg, rgba(255, 80, 120, 0.4), rgba(240, 60, 100, 0.3));
+            box-shadow: 0 8px 32px rgba(255, 50, 100, 0.5), inset 0 0 20px rgba(255, 100, 140, 0.3);
+        }
+
+        .card4 {
+            width: 240px;
+            height: 160px;
+            bottom: 10%;
+            left: 5%;
+            animation: float2 7s ease-in-out infinite;
+            background: linear-gradient(135deg, rgba(255, 200, 50, 0.3), rgba(230, 170, 30, 0.2));
+            border-color: rgba(255, 200, 50, 0.6);
+            color: rgba(255, 220, 80, 1);
+            text-shadow: 0 0 20px rgba(255, 200, 50, 0.8);
+            box-shadow: 0 8px 32px rgba(255, 200, 50, 0.3), inset 0 0 20px rgba(255, 220, 80, 0.2);
+        }
+        
+        .card4:hover {
+            background: linear-gradient(135deg, rgba(255, 220, 80, 0.4), rgba(245, 190, 60, 0.3));
+            box-shadow: 0 8px 32px rgba(255, 200, 50, 0.5), inset 0 0 20px rgba(255, 230, 100, 0.3);
+        }
+
         @keyframes float1 {
             0%, 100% { transform: translateY(0px) rotateZ(-5deg); }
             50% { transform: translateY(-30px) rotateZ(-5deg); }
@@ -225,8 +261,12 @@
     <div class="glow-background"></div>
 
     <!-- Decorative glass cards - Styled Buttons -->
-    <div class="glass-card card1">Pure CSS<br>Magic Styling</div>
+    <a href="css.html" style="text-decoration: none;">
+        <div class="glass-card card1">Pure CSS<br>Magic Styling</div>
+    </a>
     <div class="glass-card card2">Dynamic HTML<br>Button Power</div>
+    <div class="glass-card card3">JavaScript<br>Power</div>
+    <div class="glass-card card4">Python<br>Excellence</div>
 
     <!-- Main content -->
     <div class="container">

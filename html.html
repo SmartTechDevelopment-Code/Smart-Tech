@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic HTML Power</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f4a 50%, #0d1b3d 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            padding: 40px 20px;
+        }
+
+        #particleContainer {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(50, 255, 150, 0.8), rgba(30, 220, 130, 0.4));
+            border-radius: 50%;
+            filter: blur(2px);
+            box-shadow: 0 0 20px rgba(50, 255, 150, 0.6);
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: linear-gradient(135deg, rgba(50, 255, 150, 0.3), rgba(30, 220, 130, 0.2));
+            border: 2px solid rgba(50, 255, 150, 0.6);
+            color: rgba(100, 255, 180, 1);
+            padding: 12px 24px;
+            border-radius: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(50, 255, 150, 0.3);
+        }
+
+        .back-button:hover {
+            background: linear-gradient(135deg, rgba(80, 255, 170, 0.4), rgba(50, 240, 150, 0.3));
+            transform: scale(1.05);
+            box-shadow: 0 8px 32px rgba(50, 255, 150, 0.5);
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, rgba(50, 255, 150, 0.9), rgba(30, 220, 130, 0.8));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(50, 255, 150, 0.5));
+            text-align: center;
+        }
+
+        .content-section {
+            background: linear-gradient(135deg, rgba(50, 255, 150, 0.15), rgba(30, 220, 130, 0.1));
+            border: 2px solid rgba(50, 255, 150, 0.4);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(50, 255, 150, 0.2), inset 0 0 20px rgba(80, 255, 160, 0.1);
+        }
+
+        .content-section h2 {
+            color: rgba(100, 255, 180, 1);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(50, 255, 150, 0.6);
+        }
+
+        .content-section p {
+            color: rgba(200, 200, 255, 0.8);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: rgba(10, 14, 39, 0.6);
+            border-left: 4px solid rgba(50, 255, 150, 0.8);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow-x: auto;
+            color: rgba(150, 220, 255, 1);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            color: rgba(200, 200, 255, 0.8);
+            margin: 12px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: rgba(50, 255, 150, 1);
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        .playground-section {
+            margin-top: 50px;
+        }
+
+        .editors-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .editors-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .editor-panel, .preview-panel {
+            background: linear-gradient(135deg, rgba(50, 255, 150, 0.15), rgba(30, 220, 130, 0.1));
+            border: 2px solid rgba(50, 255, 150, 0.4);
+            border-radius: 15px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(50, 255, 150, 0.2);
+        }
+
+        .panel-header {
+            background: rgba(50, 255, 150, 0.25);
+            padding: 15px;
+            border-bottom: 1px solid rgba(50, 255, 150, 0.3);
+            color: rgba(100, 255, 180, 1);
+            font-weight: 600;
+        }
+
+        .editor-content {
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+        }
+
+        .code-editor {
+            flex: 1;
+            padding: 15px;
+            background: rgba(10, 14, 39, 0.6);
+            border: none;
+            color: rgba(150, 220, 255, 1);
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            resize: none;
+            outline: none;
+            line-height: 1.6;
+        }
+
+        .preview-content {
+            padding: 0;
+            height: 400px;
+            overflow: auto;
+            background: rgba(10, 14, 39, 0.3);
+        }
+
+        #previewIframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, rgba(50, 255, 150, 0.15), rgba(30, 220, 130, 0.1));
+            border: 2px solid rgba(50, 255, 150, 0.4);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(50, 255, 150, 0.2);
+        }
+
+        .tips-section h3 {
+            color: rgba(100, 255, 180, 1);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(50, 255, 150, 0.6);
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .tip-card {
+            background: rgba(50, 255, 150, 0.1);
+            border-left: 4px solid rgba(50, 255, 150, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .tip-card strong {
+            color: rgba(100, 255, 180, 1);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .tip-card p {
+            color: rgba(200, 200, 255, 0.8);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="particleContainer"></div>
+
+    <a href="index.html" class="back-button">← Back to Home</a>
+
+    <div class="container">
+        <h1>Dynamic HTML Power</h1>
+
+        <div class="content-section">
+            <h2>What is HTML?</h2>
+            <p>HTML (HyperText Markup Language) is the foundation of all websites. It provides structure and content to web pages through a system of tags and elements that tell browsers how to display information.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Key HTML Elements</h2>
+            <ul class="feature-list">
+                <li>Semantic Tags - Meaningful structure with &lt;header&gt;, &lt;nav&gt;, &lt;section&gt;, &lt;article&gt;</li>
+                <li>Forms - Interactive input elements for user data collection</li>
+                <li>Media Support - Images, audio, video, and iframe embedding</li>
+                <li>Accessibility - ARIA attributes and semantic markup</li>
+                <li>Meta Information - SEO optimization and device compatibility</li>
+                <li>Canvas & SVG - Graphics and animations</li>
+            </ul>
+        </div>
+
+        <div class="content-section playground-section">
+            <h2>Interactive HTML Playground</h2>
+            <p>Write HTML and CSS code and see the live preview!</p>
+            
+            <div class="editors-container">
+                <div class="editor-panel">
+                    <div class="panel-header">HTML & CSS Editor</div>
+                    <div class="editor-content">
+                        <textarea id="codeEditor" class="code-editor" placeholder="&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;style&gt;
+    body { background: #f0f0f0; font-family: Arial; }
+    .card { background: green; color: white; padding: 20px; border-radius: 10px; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class='card'&gt;
+    &lt;h1&gt;Hello HTML!&lt;/h1&gt;
+    &lt;p&gt;This is a sample HTML page&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;style&gt;
+    body { background: #f0f0f0; font-family: Arial; }
+    .card { background: green; color: white; padding: 20px; border-radius: 10px; margin: 20px; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class='card'&gt;
+    &lt;h1&gt;Hello HTML!&lt;/h1&gt;
+    &lt;p&gt;This is a sample HTML page with styled content&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+                    </div>
+                </div>
+
+                <div class="preview-panel">
+                    <div class="panel-header">Live Preview</div>
+                    <div class="preview-content">
+                        <iframe id="previewIframe"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips-section">
+                <h3>💡 HTML Coding Tips</h3>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <strong>Use Semantic HTML</strong>
+                        <p>Use &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;, &lt;article&gt; instead of generic divs for better structure and SEO.</p>
+                    </div>
+                    <div class="tip-card">
+                        <strong>Accessibility First</strong>
+                        <p>Always use alt text for images, proper heading hierarchy, and ARIA labels for screen readers.</p>
+                    </div>
+                    <div class="tip-card">
+                        <strong>Mobile Responsive</strong>
+                        <p>Use viewport meta tag and responsive design patterns to ensure your site works on all devices.</p>
+                    </div>
+                    <div class="tip-card">
+                        <strong>Clean Code</strong>
+                        <p>Properly indent your code, use meaningful IDs and classes, and keep your HTML organized.</p>
+                    </div>
+                    <div class="tip-card">
+                        <strong>Validate Your HTML</strong>
+                        <p>Use the W3C HTML Validator to ensure your markup is correct and follows web standards.</p>
+                    </div>
+                    <div class="tip-card">
+                        <strong>Performance Matters</strong>
+                        <p>Minimize unused code, optimize images, and load resources efficiently for faster pages.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class Particle {
+            constructor(container) {
+                this.container = container;
+                this.element = document.createElement('div');
+                this.element.className = 'particle';
+                
+                this.size = Math.random() * 20 + 5;
+                this.element.style.width = this.size + 'px';
+                this.element.style.height = this.size + 'px';
+                
+                this.x = Math.random() * window.innerWidth;
+                this.y = Math.random() * window.innerHeight;
+                
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                
+                this.life = Math.random() * 0.5 + 0.3;
+                this.maxLife = this.life;
+                
+                this.update();
+                this.container.appendChild(this.element);
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                this.vy -= 0.1;
+                this.vx += (Math.random() - 0.5) * 0.2;
+                
+                this.life -= 0.003;
+                
+                this.element.style.left = this.x + 'px';
+                this.element.style.top = this.y + 'px';
+                
+                const opacity = this.life / this.maxLife * 0.8;
+                this.element.style.opacity = opacity;
+                
+                if (this.life <= 0 || this.y < -100 || this.x < -100 || 
+                    this.x > window.innerWidth + 100 || this.y > window.innerHeight + 100) {
+                    return false;
+                }
+                return true;
+            }
+
+            remove() {
+                this.element.remove();
+            }
+        }
+
+        const particleContainer = document.getElementById('particleContainer');
+        let particles = [];
+
+        function createParticles() {
+            for (let i = 0; i < 3; i++) {
+                particles.push(new Particle(particleContainer));
+            }
+        }
+
+        function animateParticles() {
+            particles = particles.filter(p => {
+                if (p.update()) {
+                    return true;
+                } else {
+                    p.remove();
+                    return false;
+                }
+            });
+
+            if (particles.length < 100) {
+                createParticles();
+            }
+
+            requestAnimationFrame(animateParticles);
+        }
+
+        createParticles();
+        animateParticles();
+
+        // HTML Playground
+        const codeEditor = document.getElementById('codeEditor');
+        const previewIframe = document.getElementById('previewIframe');
+
+        function updatePreview() {
+            try {
+                const htmlCode = codeEditor.value;
+                previewIframe.srcdoc = htmlCode;
+            } catch (error) {
+                console.error('Error updating preview:', error);
+            }
+        }
+
+        codeEditor.addEventListener('input', updatePreview);
+        updatePreview();
+    </script>
+</body>
+</html>

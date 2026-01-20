@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Excellence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f4a 50%, #0d1b3d 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            padding: 40px 20px;
+        }
+
+        #particleContainer {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255, 200, 50, 0.8), rgba(230, 170, 30, 0.4));
+            border-radius: 50%;
+            filter: blur(2px);
+            box-shadow: 0 0 20px rgba(255, 200, 50, 0.6);
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: linear-gradient(135deg, rgba(255, 200, 50, 0.3), rgba(230, 170, 30, 0.2));
+            border: 2px solid rgba(255, 200, 50, 0.6);
+            color: rgba(255, 220, 80, 1);
+            padding: 12px 24px;
+            border-radius: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(255, 200, 50, 0.3);
+        }
+
+        .back-button:hover {
+            background: linear-gradient(135deg, rgba(255, 220, 80, 0.4), rgba(245, 190, 60, 0.3));
+            transform: scale(1.05);
+            box-shadow: 0 8px 32px rgba(255, 200, 50, 0.5);
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, rgba(255, 200, 50, 0.9), rgba(230, 170, 30, 0.8));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(255, 200, 50, 0.5));
+            text-align: center;
+        }
+
+        .content-section {
+            background: linear-gradient(135deg, rgba(255, 200, 50, 0.15), rgba(230, 170, 30, 0.1));
+            border: 2px solid rgba(255, 200, 50, 0.4);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(255, 200, 50, 0.2), inset 0 0 20px rgba(255, 220, 80, 0.1);
+        }
+
+        .content-section h2 {
+            color: rgba(255, 220, 80, 1);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(255, 200, 50, 0.6);
+        }
+
+        .content-section p {
+            color: rgba(200, 200, 255, 0.8);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: rgba(10, 14, 39, 0.6);
+            border-left: 4px solid rgba(255, 200, 50, 0.8);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow-x: auto;
+            color: rgba(150, 220, 255, 1);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            color: rgba(200, 200, 255, 0.8);
+            margin: 12px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: rgba(255, 200, 50, 1);
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        .playground-section {
+            margin-top: 50px;
+        }
+
+        .note-box {
+            background: rgba(255, 200, 50, 0.2);
+            border: 2px solid rgba(255, 200, 50, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            color: rgba(255, 220, 80, 1);
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, rgba(255, 200, 50, 0.15), rgba(230, 170, 30, 0.1));
+            border: 2px solid rgba(255, 200, 50, 0.4);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(255, 200, 50, 0.2);
+        }
+
+        .tips-section h3 {
+            color: rgba(255, 220, 80, 1);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(255, 200, 50, 0.6);
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .tip-card {
+            background: rgba(255, 200, 50, 0.1);
+            border-left: 4px solid rgba(255, 200, 50, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .tip-card strong {
+            color: rgba(255, 220, 80, 1);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .tip-card p {
+            color: rgba(200, 200, 255, 0.8);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="particleContainer"></div>
+
+    <a href="index.html" class="back-button">← Back to Home</a>
+
+    <div class="container">
+        <h1>Python Excellence</h1>
+
+        <div class="content-section">
+            <h2>What is Python?</h2>
+            <p>Python is a versatile, high-level programming language known for its simplicity and readability. It's used for web development, data science, machine learning, automation, artificial intelligence, and much more. Python powers many of the world's most innovative applications.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Python Strengths</h2>
+            <ul class="feature-list">
+                <li>Easy to Learn - Simple syntax similar to English</li>
+                <li>Versatile - Web, data science, AI, automation, scripting</li>
+                <li>Powerful Libraries - NumPy, Pandas, Django, Flask, TensorFlow</li>
+                <li>Community Support - Large, active community with extensive resources</li>
+                <li>Cross-Platform - Runs on Windows, Mac, Linux, and more</li>
+                <li>Productivity - Write more with fewer lines of code</li>
+            </ul>
+        </div>
+
+        <div class="content-section playground-section">
+            <h2>Python Learning Guide</h2>
+            
+            <div class="note-box">
+                <strong>Note:</strong> Python runtime is not available in this browser-based interface. To run Python code, you'll need to use:
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li><a href="https://www.python.org/" target="_blank" style="color: #ffff00; text-decoration: none;">Python.org</a> - Download and install locally</li>
+                    <li><a href="https://replit.com/" target="_blank" style="color: #ffff00; text-decoration: none;">Replit</a> - Online Python IDE</li>
+                    <li><a href="https://colab.research.google.com/" target="_blank" style="color: #ffff00; text-decoration: none;">Google Colab</a> - Jupyter notebooks in the cloud</li>
+                    <li><a href="https://www.kaggle.com/" target="_blank" style="color: #ffff00; text-decoration: none;">Kaggle</a> - Data science platform with Python support</li>
+                </ul>
+            </div>
+
+            <div class="tips-section">
+                <h3>💡 Python Coding Tips</h3>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <strong>Follow PEP 8</strong>
+                        <p>Stick to Python's style guide for consistent, readable code that other developers can easily understand.</p>
+                    </div>
+                    <div class="tip-card">
+                        <strong>Use Virtual Environments</strong>
+                        <p>Create isolated Python environments for each project to manage dependencies and avoid conflicts.</p>
+                    </div>
+                    <div class="tip-card">
+                        <strong>Write Meaningful Names</strong>
+                        <p>Use descriptive variable and function names. Good names make code self-documenting.</p>
+                    </div>
+                    <div class="tip-card">
+                        <strong>Handle Exceptions</strong>
+                        <p>Use try/except blocks to gracefully handle errors and make your programs more robust.</p>
+                    </div>
+                    <div class="tip-card">
+                        <strong>Test Your Code</strong>
+                        <p>Write unit tests using pytest or unittest to catch bugs early and ensure code reliability.</p>
+                    </div>
+                    <div class="tip-card">
+                        <strong>Use Libraries</strong>
+                        <p>Don't reinvent the wheel. Use established libraries like NumPy, Pandas, and Requests for common tasks.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section" style="margin-top: 30px;">
+                <h3 style="color: rgba(255, 220, 80, 1); margin-bottom: 20px;">Popular Python Resources</h3>
+                <p>Here are some great resources to learn and master Python:</p>
+                <ul class="feature-list" style="margin-top: 20px;">
+                    <li><strong>Official Documentation:</strong> <a href="https://docs.python.org/" target="_blank" style="color: #ffff00; text-decoration: none;">docs.python.org</a> - Comprehensive reference</li>
+                    <li><strong>Real Python:</strong> <a href="https://realpython.com/" target="_blank" style="color: #ffff00; text-decoration: none;">realpython.com</a> - Tutorials and articles</li>
+                    <li><strong>Codecademy:</strong> <a href="https://www.codecademy.com/" target="_blank" style="color: #ffff00; text-decoration: none;">codecademy.com</a> - Interactive learning</li>
+                    <li><strong>Stack Overflow:</strong> <a href="https://stackoverflow.com/" target="_blank" style="color: #ffff00; text-decoration: none;">stackoverflow.com</a> - Q&A community</li>
+                    <li><strong>Python Package Index:</strong> <a href="https://pypi.org/" target="_blank" style="color: #ffff00; text-decoration: none;">pypi.org</a> - Thousands of packages</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class Particle {
+            constructor(container) {
+                this.container = container;
+                this.element = document.createElement('div');
+                this.element.className = 'particle';
+                
+                this.size = Math.random() * 20 + 5;
+                this.element.style.width = this.size + 'px';
+                this.element.style.height = this.size + 'px';
+                
+                this.x = Math.random() * window.innerWidth;
+                this.y = Math.random() * window.innerHeight;
+                
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                
+                this.life = Math.random() * 0.5 + 0.3;
+                this.maxLife = this.life;
+                
+                this.update();
+                this.container.appendChild(this.element);
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                this.vy -= 0.1;
+                this.vx += (Math.random() - 0.5) * 0.2;
+                
+                this.life -= 0.003;
+                
+                this.element.style.left = this.x + 'px';
+                this.element.style.top = this.y + 'px';
+                
+                const opacity = this.life / this.maxLife * 0.8;
+                this.element.style.opacity = opacity;
+                
+                if (this.life <= 0 || this.y < -100 || this.x < -100 || 
+                    this.x > window.innerWidth + 100 || this.y > window.innerHeight + 100) {
+                    return false;
+                }
+                return true;
+            }
+
+            remove() {
+                this.element.remove();
+            }
+        }
+
+        const particleContainer = document.getElementById('particleContainer');
+        let particles = [];
+
+        function createParticles() {
+            for (let i = 0; i < 3; i++) {
+                particles.push(new Particle(particleContainer));
+            }
+        }
+
+        function animateParticles() {
+            particles = particles.filter(p => {
+                if (p.update()) {
+                    return true;
+                } else {
+                    p.remove();
+                    return false;
+                }
+            });
+
+            if (particles.length < 100) {
+                createParticles();
+            }
+
+            requestAnimationFrame(animateParticles);
+        }
+
+        createParticles();
+        animateParticles();
+    </script>
+</body>
+</html>
